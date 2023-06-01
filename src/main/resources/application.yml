@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    url: ${database.url}
+    user: ${database.username}
+    password: ${database.password}
+
+yandex:
+  access:
+    key:
+      id: "YCAJE7lMZwqqwPdPfx9Dy8_dz"
+  secret:
+    access:
+      key: "YCN1r7WZMoy73bD-sh1HwGAcUAYv212whmO6f95s"
+  region: "ru-central1"
+  serviceEndpoint: "storage.yandexcloud.net"
+  bucket:
+    name: "social-network-bucket"
+
+aes-256:
+  secret: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+jwt:
+  exprireSecs: 604800
+  secret: "asdts9g874wh54lwnODGDhdslghndass7gs42t3983y"
