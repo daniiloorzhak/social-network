@@ -51,7 +51,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/auth/**")
+                                .requestMatchers("/auth/**", "swagger-ui/**", "v3/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated())
