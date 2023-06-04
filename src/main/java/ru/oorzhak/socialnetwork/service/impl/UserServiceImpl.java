@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     @Override
     @Transactional
-    public User save(UserRegisterDTO userRegisterDTO) {
+    public User register(UserRegisterDTO userRegisterDTO) {
         if (userRepository.existsByEmail(userRegisterDTO.getEmail()))
             throw new UserWithEmailAlreadyExists(userRegisterDTO.getEmail());
          if (userRepository.existsByUsername(userRegisterDTO.getUsername()))

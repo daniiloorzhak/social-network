@@ -16,11 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 public class FriendServiceImpl implements FriendService {
     private final UserRepository userRepository;
+
     @Override
     public List<String> getFriendsList() {
-        User currentUser = userRepository
-                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow();
+        User currentUser = getCurrentUser();
         return currentUser.getFriends().stream()
                 .map(User::getUsername)
                 .toList();
@@ -29,12 +28,8 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public void sendFriendRequest(String username) {
-        User currentUser = userRepository
-                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow();
-        User friend = userRepository
-                .findByUsername(username)
-                .orElseThrow();
+        User currentUser = getCurrentUser();
+        User friend = getFriend(username);
         currentUser.getFriendRequest().add(friend);
         currentUser.getFollowers().add(friend);
         userRepository.save(currentUser);
@@ -43,12 +38,8 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public void acceptFriendRequest(String username) {
-        User currentUser = userRepository
-                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow();
-        User friend = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new UserWithUsernameNotFound(username));
+        User currentUser = getCurrentUser();
+        User friend = getFriend(username);
         if (!currentUser.getFriendRequest().contains(friend)) {
             throw new UserNotSendFriendRequest(username);
         }
@@ -61,12 +52,8 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public void declineFriendRequest(String username) {
-        User currentUser = userRepository
-                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow();
-        User friend = userRepository
-                .findByUsername(username)
-                .orElseThrow();
+        User currentUser = getCurrentUser();
+        User friend = getFriend(username);
         if (!currentUser.getFriendRequest().contains(friend)) {
             throw new UserNotSendFriendRequest(username);
         }
@@ -77,14 +64,22 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public void deleteFriend(String username) {
-        User currentUser = userRepository
-                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow();
-        User friend = userRepository
-                .findByUsername(username)
-                .orElseThrow();
+        User currentUser = getCurrentUser();
+        User friend = getFriend(username);
         currentUser.getFriends().remove(friend);
         friend.getFriends().remove(currentUser);
         userRepository.save(currentUser);
+    }
+
+    private User getFriend(String username) {
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserWithUsernameNotFound(username));
+    }
+
+    private User getCurrentUser() {
+        return userRepository
+                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
     }
 }

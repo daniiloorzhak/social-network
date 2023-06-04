@@ -29,12 +29,12 @@ public class UserServiceTest {
     @Test
     public void whenUsernameAlreadyExists_thenUserWithUsernameAlreadyExists() {
         when(userRepository.existsByUsername(any())).thenReturn(true);
-        Assertions.assertThrows(UserWithUsernameAlreadyExists.class, () -> userService.save(new UserRegisterDTO()));
+        Assertions.assertThrows(UserWithUsernameAlreadyExists.class, () -> userService.register(new UserRegisterDTO()));
     }
 
     @Test
     public void whenEmailAlreadyExists_thenUserWithEmailAlreadyExists() {
         when(userRepository.existsByEmail(any())).thenReturn(true);
-        Assertions.assertThrows(UserWithEmailAlreadyExists.class, () -> userService.save(new UserRegisterDTO()));
+        Assertions.assertThrows(UserWithEmailAlreadyExists.class, () -> userService.register(new UserRegisterDTO()));
     }
 }

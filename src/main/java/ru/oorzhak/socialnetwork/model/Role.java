@@ -16,8 +16,8 @@ import java.util.Objects;
 @Setter
 public class Role {
     private static final String ROLE_PREFIX = "ROLE_";
-    public static final String ADMIN = "ADMIN";
-    public static final String USER = "USER";
+    private static final String ADMIN = "ADMIN";
+    private static final String USER = "USER";
     @Transient
     public static final Role ADMIN_ROLE = new Role(1L, ROLE_PREFIX + ADMIN);
     @Transient

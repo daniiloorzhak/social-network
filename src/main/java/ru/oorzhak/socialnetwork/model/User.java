@@ -1,6 +1,7 @@
 package ru.oorzhak.socialnetwork.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -16,10 +17,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String username;
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String email;
+    @NotBlank
+    @Column(nullable = false)
     private String password;
 
     @ManyToMany(cascade = {CascadeType.ALL})
@@ -29,16 +34,16 @@ public class User {
     private List<User> friends;
 
     @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "followers",
-            joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> following;
-
-    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "friend_request",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "sender_id"))
     private List<User> friendRequest;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "followers",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> following;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "followers",

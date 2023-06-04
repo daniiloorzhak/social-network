@@ -11,6 +11,6 @@ public class MessageDetailsDTO {
     private Long id;
     private Date createdAt;
     private String body;
-    private String fromUser;
-    private String toUser;
+    private String fromUserUsername;
+    private String toUserUsername;
 }

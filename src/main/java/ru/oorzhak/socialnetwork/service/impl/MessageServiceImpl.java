@@ -24,12 +24,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Message sendMessage(String toUserUsername, MessageSendDTO messageSendDTO) {
-        User to = userRepository
-                .findByUsername(toUserUsername)
-                .orElseThrow(() -> new UserWithUsernameNotFound(toUserUsername));
-        User from = userRepository
-                .findByUsername(getCurrentUserUsername())
-                .orElseThrow();
+        User to = getToUser(toUserUsername);
+        User from = getFromUser();
         if (!from.getFriends().contains(to))
             throw new UserWithUsernameNotFriend(toUserUsername);
         return messageRepository.save(Message.builder()
@@ -41,32 +37,49 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageDetailsDTO> getMessageHistory(String participantUsername) {
-        User to = userRepository
-                .findByUsername(participantUsername)
-                .orElseThrow(() -> new UserWithUsernameNotFound(participantUsername));
-        User from = userRepository
-                .findByUsername(getCurrentUserUsername())
-                .orElseThrow();
+        User to = getToUser(participantUsername);
+        User from = getFromUser();
         if (!from.getFriends().contains(to))
             throw new UserWithUsernameNotFriend(participantUsername);
         return messageRepository.findMessageHistory(participantUsername, getCurrentUserUsername()).stream()
-                .map(message -> MessageDetailsDTO.builder()
-                        .id(message.getId())
-                        .createdAt(message.getCreatedAt())
-                        .body(message.getBody())
-                        .fromUser(message.getFromUser().getUsername())
-                        .toUser(message.getToUser().getUsername())
-                        .build()
+                .map(MessageServiceImpl::messageToMessageDetailsDTO
                 )
                 .toList();
     }
 
+    private static MessageDetailsDTO messageToMessageDetailsDTO(Message message) {
+        return MessageDetailsDTO.builder()
+                .id(message.getId())
+                .createdAt(message.getCreatedAt())
+                .body(message.getBody())
+                .fromUserUsername(message.getFromUser().getUsername())
+                .toUserUsername(message.getToUser().getUsername())
+                .build();
+    }
+
     @Override
     public List<String> getUsersWithMessageHistory() {
-        return messageRepository.findUsersWithMessageHistory(getCurrentUserUsername());
+        return messageRepository
+                .findUsersWithMessageHistory(
+                        getCurrentUserUsername());
     }
 
     private String getCurrentUserUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        return SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+    }
+
+    private User getFromUser() {
+        return userRepository
+                .findByUsername(getCurrentUserUsername())
+                .orElseThrow();
+    }
+
+    private User getToUser(String toUserUsername) {
+        return userRepository
+                .findByUsername(toUserUsername)
+                .orElseThrow(() -> new UserWithUsernameNotFound(toUserUsername));
     }
 }

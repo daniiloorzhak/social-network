@@ -29,17 +29,17 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    @Operation(summary = "Register user", security = {}, responses = {
+    @Operation(summary = "Register user", responses = {
             @ApiResponse(responseCode = "200", description = "User successfully created"),
             @ApiResponse(responseCode = "400", description = "Bad user credentials")
     })
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
-        User user = userService.save(userRegisterDTO);
+        User user = userService.register(userRegisterDTO);
         return ResponseEntity.ok(user.getUsername());
     }
 
-    @Operation(summary = "Log in user", responses = {
+    @Operation(summary = "Log user in", responses = {
             @ApiResponse(responseCode = "200", description = "User successfully logged in"),
             @ApiResponse(responseCode = "400", description = "Bad user credentials")
     })
