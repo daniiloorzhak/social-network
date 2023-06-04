@@ -1,10 +1,10 @@
 package ru.oorzhak.socialnetwork.exception;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class UserNotSendFriendRequest extends RuntimeException {
     private final String username;
-    public UserNotSendFriendRequest(String username) {
-        this.username = username;
-    }
 
     @Override
     public String getMessage() {

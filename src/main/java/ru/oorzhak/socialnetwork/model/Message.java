@@ -1,7 +1,6 @@
 package ru.oorzhak.socialnetwork.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -9,8 +8,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "messages")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 @Setter
@@ -20,7 +19,6 @@ public class Message {
     private Long id;
     @CreationTimestamp
     private Date createdAt;
-    @NotBlank
     private String body;
 
     @ManyToOne(cascade = {CascadeType.ALL})

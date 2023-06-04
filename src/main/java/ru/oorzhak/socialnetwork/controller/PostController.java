@@ -1,5 +1,6 @@
 package ru.oorzhak.socialnetwork.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/post")
 @AllArgsConstructor
+@Tag(name = "Post")
 public class PostController {
     private final PostService postService;
 

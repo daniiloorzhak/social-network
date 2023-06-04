@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.oorzhak.socialnetwork.dto.MessageDTO;
-import ru.oorzhak.socialnetwork.dto.MessageResponseDTO;
+import ru.oorzhak.socialnetwork.dto.MessageSendDTO;
+import ru.oorzhak.socialnetwork.dto.MessageDetailsDTO;
 import ru.oorzhak.socialnetwork.service.MessageService;
 
 import java.util.List;
@@ -23,12 +23,12 @@ public class MessageController {
     }
 
     @GetMapping("{username}")
-    public ResponseEntity<List<MessageResponseDTO>> getUserMessageHistory(@PathVariable String username) {
+    public ResponseEntity<List<MessageDetailsDTO>> getUserMessageHistory(@PathVariable String username) {
         return ResponseEntity.ok(messageService.getMessageHistory(username));
     }
 
     @PostMapping("{username}")
-    public ResponseEntity<?> sendMessageToUser(@PathVariable String username, @RequestBody @NotBlank MessageDTO messageDTO){
-        return ResponseEntity.ok(messageService.sendMessage(username, messageDTO));
+    public ResponseEntity<?> sendMessageToUser(@PathVariable String username, @RequestBody @NotBlank MessageSendDTO messageSendDTO){
+        return ResponseEntity.ok(messageService.sendMessage(username, messageSendDTO));
     }
 }

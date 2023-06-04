@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Builder
-public class MessageResponseDTO {
+public class MessageDetailsDTO {
     private Long id;
     private Date createdAt;
     private String body;

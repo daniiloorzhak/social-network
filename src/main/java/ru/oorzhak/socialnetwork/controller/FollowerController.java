@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/subscriber")
 @AllArgsConstructor
-@Tag(name = "Subscriber")
+@Tag(name = "Follower")
 public class FollowerController {
     private final SubscriberService subscriberService;
     @Operation(summary = "Get list of subscribers")

@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.oorzhak.socialnetwork.dto.MessageDTO;
-import ru.oorzhak.socialnetwork.dto.MessageResponseDTO;
+import ru.oorzhak.socialnetwork.dto.MessageSendDTO;
+import ru.oorzhak.socialnetwork.dto.MessageDetailsDTO;
 import ru.oorzhak.socialnetwork.exception.UserWithUsernameNotFound;
 import ru.oorzhak.socialnetwork.exception.UserWithUsernameNotFriend;
 import ru.oorzhak.socialnetwork.model.Message;
@@ -23,7 +23,7 @@ public class MessageServiceImpl implements MessageService {
     private final UserRepository userRepository;
     @Override
     @Transactional
-    public Message sendMessage(String toUserUsername, MessageDTO messageDTO) {
+    public Message sendMessage(String toUserUsername, MessageSendDTO messageSendDTO) {
         User to = userRepository
                 .findByUsername(toUserUsername)
                 .orElseThrow(() -> new UserWithUsernameNotFound(toUserUsername));
@@ -33,14 +33,14 @@ public class MessageServiceImpl implements MessageService {
         if (!from.getFriends().contains(to))
             throw new UserWithUsernameNotFriend(toUserUsername);
         return messageRepository.save(Message.builder()
-                .body(messageDTO.getBody())
+                .body(messageSendDTO.getBody())
                 .fromUser(from)
                 .toUser(to)
                 .build());
     }
 
     @Override
-    public List<MessageResponseDTO> getMessageHistory(String participantUsername) {
+    public List<MessageDetailsDTO> getMessageHistory(String participantUsername) {
         User to = userRepository
                 .findByUsername(participantUsername)
                 .orElseThrow(() -> new UserWithUsernameNotFound(participantUsername));
@@ -50,7 +50,7 @@ public class MessageServiceImpl implements MessageService {
         if (!from.getFriends().contains(to))
             throw new UserWithUsernameNotFriend(participantUsername);
         return messageRepository.findMessageHistory(participantUsername, getCurrentUserUsername()).stream()
-                .map(message -> MessageResponseDTO.builder()
+                .map(message -> MessageDetailsDTO.builder()
                         .id(message.getId())
                         .createdAt(message.getCreatedAt())
                         .body(message.getBody())
