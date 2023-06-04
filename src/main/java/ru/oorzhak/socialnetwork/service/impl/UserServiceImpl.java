@@ -7,9 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.oorzhak.socialnetwork.dto.UserRegisterDTO;
 import ru.oorzhak.socialnetwork.exception.UserWithEmailAlreadyExists;
 import ru.oorzhak.socialnetwork.exception.UserWithUsernameAlreadyExists;
+import ru.oorzhak.socialnetwork.model.Role;
 import ru.oorzhak.socialnetwork.model.User;
 import ru.oorzhak.socialnetwork.repository.UserRepository;
 import ru.oorzhak.socialnetwork.service.UserService;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -32,6 +35,7 @@ public class UserServiceImpl implements UserService {
                 .username(userRegisterDTO.getUsername())
                 .email(userRegisterDTO.getEmail())
                 .password(passwordEncoder.encode(userRegisterDTO.getPassword()))
+                .roles(List.of(Role.USER_ROLE))
                 .build();
     }
 }

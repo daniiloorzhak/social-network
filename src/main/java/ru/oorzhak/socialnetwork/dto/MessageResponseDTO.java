@@ -4,15 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Builder
-public class PostDTO {
+public class MessageResponseDTO {
     private Long id;
-    private String creator;
-    private String title;
-    private String body;
     private Date createdAt;
-    private List<String> imageUrls;
+    private String body;
+    private String fromUser;
+    private String toUser;
 }

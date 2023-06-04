@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.oorzhak.socialnetwork.exception.UserWithEmailAlreadyExists;
-import ru.oorzhak.socialnetwork.exception.UserWithUsernameAlreadyExists;
+import ru.oorzhak.socialnetwork.exception.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -46,6 +45,24 @@ public class ErrorControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserWithEmailAlreadyExists.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleUserWithEmailAlreadyExists(HttpServletRequest request, Exception ex) {
+        return handleCustomException(HttpStatus.BAD_REQUEST, ex);
+    }
+
+    @ExceptionHandler(UserWithUsernameNotFound.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, String>> handleUserWithUsernameNotFound(HttpServletRequest request, Exception ex) {
+        return handleCustomException(HttpStatus.BAD_REQUEST, ex);
+    }
+
+    @ExceptionHandler(UserWithUsernameNotFriend.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, String>> handleUserWithUsernameNotFriend(HttpServletRequest request, Exception ex) {
+        return handleCustomException(HttpStatus.BAD_REQUEST, ex);
+    }
+
+    @ExceptionHandler(UserNotSendFriendRequest.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, String>> handleUserNotSendFriendRequest(HttpServletRequest request, Exception ex) {
         return handleCustomException(HttpStatus.BAD_REQUEST, ex);
     }
 

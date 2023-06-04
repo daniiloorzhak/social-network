@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
-@Tag(name = "Authentication", description = "")
+@Tag(name = "Authentication", description = "Sign in and sign up")
 public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserService userService;

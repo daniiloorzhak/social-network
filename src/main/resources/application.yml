@@ -8,6 +8,10 @@ spring:
     url: ${database.url}
     user: ${database.username}
     password: ${database.password}
+  servlet:
+    multipart:
+      max-request-size: '10MB'
+      max-file-size: '10MB'
 
 yandex:
   access:
@@ -25,5 +29,5 @@ aes-256:
   secret: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 jwt:
-  exprireSecs: 604800
+  expireSecs: 604800
   secret: "asdts9g874wh54lwnODGDhdslghndass7gs42t3983y"

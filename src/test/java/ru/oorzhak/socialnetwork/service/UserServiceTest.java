@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.oorzhak.socialnetwork.dto.UserRegisterDTO;
 import ru.oorzhak.socialnetwork.exception.UserWithEmailAlreadyExists;
 import ru.oorzhak.socialnetwork.exception.UserWithUsernameAlreadyExists;
@@ -20,6 +21,8 @@ import static org.mockito.Mockito.when;
 public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserServiceImpl userService;
 
