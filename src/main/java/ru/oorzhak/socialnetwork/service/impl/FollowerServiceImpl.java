@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.oorzhak.socialnetwork.model.User;
 import ru.oorzhak.socialnetwork.repository.UserRepository;
-import ru.oorzhak.socialnetwork.service.SubscriberService;
+import ru.oorzhak.socialnetwork.service.FollowerService;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class SubscriberServiceImpl implements SubscriberService {
+public class FollowerServiceImpl implements FollowerService {
     private final UserRepository userRepository;
     @Override
     public List<String> getSubscribersList() {
