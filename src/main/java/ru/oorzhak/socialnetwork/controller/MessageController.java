@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/message")
 @AllArgsConstructor
-@Tag(name = "Message", description = "")
+@Tag(name = "Message", description = "Common messaging operations")
 public class MessageController {
     private final MessageService messageService;
     @GetMapping

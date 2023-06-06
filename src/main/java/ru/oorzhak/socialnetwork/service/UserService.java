@@ -5,4 +5,10 @@ import ru.oorzhak.socialnetwork.model.User;
 
 public interface UserService {
     User signup(UserRegisterDTO userRegisterDTO);
+
+    String getLoggedInUsername();
+
+    User getLoggedInUser();
+
+    User getUserByUsername(String username);
 }

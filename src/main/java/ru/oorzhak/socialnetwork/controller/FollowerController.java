@@ -10,14 +10,14 @@ import ru.oorzhak.socialnetwork.service.FollowerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/subscriber")
+@RequestMapping("/follower")
 @AllArgsConstructor
 @Tag(name = "Follower", description = "")
 public class FollowerController {
     private final FollowerService followerService;
-    @Operation(summary = "Get list of subscribers")
+    @Operation(summary = "Get list of followers")
     @GetMapping
-    public ResponseEntity<List<String>> getSubscribers(){
-        return ResponseEntity.ok(followerService.getSubscribersList());
+    public ResponseEntity<List<String>> getFollowersUsernames(){
+        return ResponseEntity.ok(followerService.getFollowersUsernamesList());
     }
 }
