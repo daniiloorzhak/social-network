@@ -4,5 +4,5 @@ import ru.oorzhak.socialnetwork.dto.UserRegisterDTO;
 import ru.oorzhak.socialnetwork.model.User;
 
 public interface UserService {
-    User register(UserRegisterDTO userRegisterDTO);
+    User signup(UserRegisterDTO userRegisterDTO);
 }

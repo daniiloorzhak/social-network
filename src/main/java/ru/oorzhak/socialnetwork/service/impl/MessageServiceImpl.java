@@ -19,32 +19,51 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class MessageServiceImpl implements MessageService {
+    private final String NAME = SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getName();
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+
     @Override
-    @Transactional
-    public Message sendMessage(String toUserUsername, MessageSendDTO messageSendDTO) {
-        User to = getToUser(toUserUsername);
-        User from = getFromUser();
-        if (!from.getFriends().contains(to))
-            throw new UserWithUsernameNotFriend(toUserUsername);
-        return messageRepository.save(Message.builder()
-                .body(messageSendDTO.getBody())
-                .fromUser(from)
-                .toUser(to)
-                .build());
+    public List<String> getUsersWithMessageHistory() {
+        return messageRepository.findUsersWithMessageHistory(NAME);
     }
 
     @Override
     public List<MessageDetailsDTO> getMessageHistory(String participantUsername) {
-        User to = getToUser(participantUsername);
-        User from = getFromUser();
-        if (!from.getFriends().contains(to))
-            throw new UserWithUsernameNotFriend(participantUsername);
-        return messageRepository.findMessageHistory(participantUsername, getCurrentUserUsername()).stream()
-                .map(MessageServiceImpl::messageToMessageDetailsDTO
-                )
+        User from = userRepository
+                .findByUsername(NAME)
+                .orElseThrow();
+        User to = userRepository
+                .findByUsername(participantUsername)
+                .orElseThrow(() -> new UserWithUsernameNotFound(participantUsername));
+        if (!from.getFriends().contains(to) && !to.getFriends().contains(from))
+            throw new UserWithUsernameNotFriend(to.getUsername());
+        return messageRepository
+                .findMessageHistory(participantUsername, NAME).stream()
+                .map(MessageServiceImpl::messageToMessageDetailsDTO)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public Message sendMessage(String participantUsername, MessageSendDTO messageSendDTO) {
+        User from = userRepository
+                .findByUsername(NAME)
+                .orElseThrow();
+        User to = userRepository
+                .findByUsername(participantUsername)
+                .orElseThrow(() -> new UserWithUsernameNotFound(participantUsername));
+        if (!from.getFriends().contains(to) && !to.getFriends().contains(from))
+            throw new UserWithUsernameNotFriend(to.getUsername());
+        Message message = Message.builder()
+                .body(messageSendDTO.getBody())
+                .fromUser(from)
+                .toUser(to)
+                .build();
+        return messageRepository.save(message);
     }
 
     private static MessageDetailsDTO messageToMessageDetailsDTO(Message message) {
@@ -55,31 +74,5 @@ public class MessageServiceImpl implements MessageService {
                 .fromUserUsername(message.getFromUser().getUsername())
                 .toUserUsername(message.getToUser().getUsername())
                 .build();
-    }
-
-    @Override
-    public List<String> getUsersWithMessageHistory() {
-        return messageRepository
-                .findUsersWithMessageHistory(
-                        getCurrentUserUsername());
-    }
-
-    private String getCurrentUserUsername() {
-        return SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
-    }
-
-    private User getFromUser() {
-        return userRepository
-                .findByUsername(getCurrentUserUsername())
-                .orElseThrow();
-    }
-
-    private User getToUser(String toUserUsername) {
-        return userRepository
-                .findByUsername(toUserUsername)
-                .orElseThrow(() -> new UserWithUsernameNotFound(toUserUsername));
     }
 }

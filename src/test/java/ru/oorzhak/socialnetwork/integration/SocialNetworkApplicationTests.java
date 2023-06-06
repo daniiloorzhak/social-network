@@ -1,4 +1,4 @@
-package ru.oorzhak.socialnetwork;
+package ru.oorzhak.socialnetwork.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

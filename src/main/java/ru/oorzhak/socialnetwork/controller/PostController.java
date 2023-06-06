@@ -40,13 +40,12 @@ public class PostController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updatePost(@RequestBody @Valid PostCreateDTO postDTO, List<MultipartFile> images, @PathVariable Long id) {
-        postService.update(postDTO, images, id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> updatePost(@RequestBody @Valid PostCreateDTO postDTO, List<MultipartFile> images, @PathVariable Long id) {
+        return ResponseEntity.ok(postService.update(postDTO, images, id));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deletePost(@PathVariable Long id) {
-        return null;
+    public ResponseEntity<Long> deletePost(@PathVariable Long id) {
+        return ResponseEntity.ok(postService.delete(id));
     }
 }

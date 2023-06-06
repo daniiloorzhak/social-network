@@ -1,4 +1,4 @@
-package ru.oorzhak.socialnetwork.service;
+package ru.oorzhak.socialnetwork.unit.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,12 @@ public class UserServiceTest {
     @Test
     public void whenUsernameAlreadyExists_thenUserWithUsernameAlreadyExists() {
         when(userRepository.existsByUsername(any())).thenReturn(true);
-        Assertions.assertThrows(UserWithUsernameAlreadyExists.class, () -> userService.register(new UserRegisterDTO()));
+        Assertions.assertThrows(UserWithUsernameAlreadyExists.class, () -> userService.signup(new UserRegisterDTO()));
     }
 
     @Test
     public void whenEmailAlreadyExists_thenUserWithEmailAlreadyExists() {
         when(userRepository.existsByEmail(any())).thenReturn(true);
-        Assertions.assertThrows(UserWithEmailAlreadyExists.class, () -> userService.register(new UserRegisterDTO()));
+        Assertions.assertThrows(UserWithEmailAlreadyExists.class, () -> userService.signup(new UserRegisterDTO()));
     }
 }

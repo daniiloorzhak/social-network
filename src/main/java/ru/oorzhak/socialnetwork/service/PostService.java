@@ -10,5 +10,7 @@ public interface PostService {
     Long save(PostCreateDTO postCreateDTO, List<MultipartFile> images);
     List<PostDetailsDTO> getFeed(Integer page, Integer size);
     List<PostDetailsDTO> getUserPosts(String username);
-    void update(PostCreateDTO postDTO, List<MultipartFile> images, Long id);
+    Long update(PostCreateDTO postDTO, List<MultipartFile> images, Long id);
+
+    Long delete(Long id);
 }

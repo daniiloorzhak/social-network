@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.oorzhak.socialnetwork.exception.UserNotSendFriendRequest;
-import ru.oorzhak.socialnetwork.exception.UserWithUsernameNotFound;
+import ru.oorzhak.socialnetwork.exception.*;
 import ru.oorzhak.socialnetwork.model.User;
 import ru.oorzhak.socialnetwork.repository.UserRepository;
 import ru.oorzhak.socialnetwork.service.FriendService;
@@ -18,26 +17,34 @@ public class FriendServiceImpl implements FriendService {
     private final UserRepository userRepository;
 
     @Override
+    public List<String> getFriendRequestsUsernames() {
+        return getCurrentUser().getFriendRequest().stream()
+                .map(User::getUsername)
+                .toList();
+    }
+
+    @Override
     public List<String> getFriendsList() {
-        User currentUser = getCurrentUser();
-        return currentUser.getFriends().stream()
+        return getCurrentUser().getFriends().stream()
                 .map(User::getUsername)
                 .toList();
     }
 
     @Override
     @Transactional
-    public void sendFriendRequest(String username) {
+    public String sendFriendRequest(String username) {
         User currentUser = getCurrentUser();
         User friend = getFriend(username);
+        if (currentUser.getFriends().contains(friend))
+            throw new UserWithUsernameAlreadyFriend(username);
         currentUser.getFriendRequest().add(friend);
         currentUser.getFollowers().add(friend);
-        userRepository.save(currentUser);
+        return userRepository.save(currentUser).getUsername();
     }
 
     @Override
     @Transactional
-    public void acceptFriendRequest(String username) {
+    public String acceptFriendRequest(String username) {
         User currentUser = getCurrentUser();
         User friend = getFriend(username);
         if (!currentUser.getFriendRequest().contains(friend)) {
@@ -47,11 +54,13 @@ public class FriendServiceImpl implements FriendService {
         currentUser.getFriends().add(friend);
         friend.getFriends().add(currentUser);
         userRepository.save(currentUser);
+        userRepository.save(friend);
+        return friend.getUsername();
     }
 
     @Override
     @Transactional
-    public void declineFriendRequest(String username) {
+    public String declineFriendRequest(String username) {
         User currentUser = getCurrentUser();
         User friend = getFriend(username);
         if (!currentUser.getFriendRequest().contains(friend)) {
@@ -59,16 +68,22 @@ public class FriendServiceImpl implements FriendService {
         }
         currentUser.getFriendRequest().remove(friend);
         userRepository.save(currentUser);
+        return friend.getUsername();
     }
 
     @Override
     @Transactional
-    public void deleteFriend(String username) {
+    public String deleteFriend(String username) {
         User currentUser = getCurrentUser();
         User friend = getFriend(username);
+        if (!currentUser.getFriends().contains(friend))
+            throw new UserWithUsernameNotFriend(username);
         currentUser.getFriends().remove(friend);
         friend.getFriends().remove(currentUser);
+        currentUser.getFollowers().remove(friend);
         userRepository.save(currentUser);
+        userRepository.save(friend);
+        return friend.getUsername();
     }
 
     private User getFriend(String username) {
@@ -78,8 +93,12 @@ public class FriendServiceImpl implements FriendService {
     }
 
     private User getCurrentUser() {
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
         return userRepository
-                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow();
+                .findByUsername(username)
+                .orElseThrow(() -> new UserWithUsernameNotFound(username));
     }
 }

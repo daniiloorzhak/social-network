@@ -33,9 +33,9 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "User successfully created"),
             @ApiResponse(responseCode = "400", description = "Bad user credentials")
     })
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
-        User user = userService.register(userRegisterDTO);
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
+        User user = userService.signup(userRegisterDTO);
         return ResponseEntity.ok(user.getUsername());
     }
 
@@ -43,8 +43,8 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "User successfully logged in"),
             @ApiResponse(responseCode = "400", description = "Bad user credentials")
     })
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+    @PostMapping("/signin")
+    public ResponseEntity<Map<String, String>> signin(@RequestBody @Valid UserLoginDTO userLoginDTO) {
         var authToken = new UsernamePasswordAuthenticationToken(userLoginDTO.getUsername(), userLoginDTO.getPassword());
         var authentication = authenticationManager.authenticate(authToken);
         String jwtToken = jwtUtil.generateToken(authentication.getName());

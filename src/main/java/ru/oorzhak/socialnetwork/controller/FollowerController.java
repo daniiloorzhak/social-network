@@ -12,19 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/subscriber")
 @AllArgsConstructor
-@Tag(name = "Follower")
+@Tag(name = "Follower", description = "")
 public class FollowerController {
     private final FollowerService followerService;
     @Operation(summary = "Get list of subscribers")
     @GetMapping
     public ResponseEntity<List<String>> getSubscribers(){
         return ResponseEntity.ok(followerService.getSubscribersList());
-    }
-
-    @Operation(summary = "Delete user from subscribers")
-    @DeleteMapping("{username}")
-    public ResponseEntity<?> deleteSubscriber(@PathVariable String username){
-//        return ResponseEntity.ok(subscriberService.deleteSubscriber(username));
-        return null;
     }
 }
